@@ -1,5 +1,9 @@
 # stream-labs-task
 
+## Info
+* [Thought Process](SOLUTION.md)
+* [Questions and answers](ANSWERS.md)
+
 ## Project setup
 ```
 npm install
