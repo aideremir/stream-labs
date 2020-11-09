@@ -13,7 +13,7 @@ const isPointInsideObject = (pointX, pointY, object) => pointX >= object.x
 export default {
   name: 'Editor',
   created() {
-    this.editor = { // TODO: move to store
+    this.editor = { // TODO: move to vuex store (https://www.npmjs.com/package/vuex-persistedstate)
       objects: [],
     };
     this.draggedObject = null;
@@ -33,18 +33,31 @@ export default {
     this.removeListeners();
   },
   methods: {
+    /*
+    * Adds browser event listeners
+    * */
     addListeners() {
       window.addEventListener('resize', this.redrawObjects);
       this.canvas.addEventListener('mousedown', this.mouseDown);
       this.canvas.addEventListener('mousemove', this.mouseMove);
       this.canvas.addEventListener('mouseup', this.mouseUp);
     },
+    /*
+    * Removes browser event listeners
+    * */
     removeListeners() {
       window.removeEventListener('resize', this.redrawObjects);
       this.canvas.removeEventListener('mousedown', this.mouseDown);
       this.canvas.removeEventListener('mousemove', this.mouseMove);
       this.canvas.removeEventListener('mouseup', this.mouseUp);
     },
+    /*
+    * Adds image to canvas
+    *
+    * @param {string} url — image url to load
+    * @param {number} x — image x coordinate
+    * @param {number} y — image y coordinate
+    * */
     addImage(url, x = 0, y = 0) {
       const img = new Image();
       img.onload = () => {
@@ -58,6 +71,9 @@ export default {
       };
       img.src = url;
     },
+    /*
+    * Redraws all the objects on some events
+    * */
     redrawObjects() {
       // preventing added image resize on canvas resizing
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -67,11 +83,18 @@ export default {
       });
       this.addObjectHighlight();
     },
+    /*
+    * Feeds the size back to the canvas
+    * */
     setUpCanvas() {
-      // Feed the size back to the canvas
       this.canvas.width = this.canvas.clientWidth;
       this.canvas.height = this.canvas.clientHeight;
     },
+    /*
+    * Mouse down event handler
+    *
+    * @param {Event} e — mouse event
+    * */
     mouseDown(e) {
       const mouseX = e.clientX;
       const mouseY = e.clientY;
@@ -91,6 +114,11 @@ export default {
         i -= 1;
       }
     },
+    /*
+    * Mouse move event handler
+    *
+    * @param {Event} e — mouse event
+    * */
     mouseMove(e) {
       if (!this.draggedObject) {
         return;
@@ -110,18 +138,29 @@ export default {
       this.mouseStartX = mouseX;
       this.mouseStartY = mouseY;
     },
+    /*
+    * Mouse up event handler
+    * */
     mouseUp() {
       this.draggedObject.isDragging = false;
       this.draggedObject = null;
       this.mouseStartX = null;
       this.mouseStartY = null;
     },
+    /*
+    * Checks if object is fully on canvas
+    *
+    * @returns {boolean}
+    * */
     isDraggedObjectFullyOnCanvas() {
       return this.draggedObject.x >= 0
         && this.draggedObject.x + this.draggedObject.img.width < this.canvas.width
         && this.draggedObject.y >= 0
         && this.draggedObject.y + this.draggedObject.img.height < this.canvas.height;
     },
+    /*
+    * Adds green border to object when dragging
+    * */
     addObjectHighlight() {
       if (!this.draggedObject) {
         return;
