@@ -59,8 +59,6 @@ export default {
       img.onload = () => {
         this.context.drawImage(img, x, y);
         this.editor.objects.push({
-          id: (new Date()).valueOf(),
-          url,
           img,
           x,
           y,
@@ -113,14 +111,12 @@ export default {
       this.draggedObject.x += dX;
       this.draggedObject.y += dY;
 
-      this.mouseStartX = mouseX;
-      this.mouseStartY = mouseY;
-
-      if (!this.isDraggedObjectFullyOnCanvas()) {
-        return;
+      if (this.isDraggedObjectFullyOnCanvas()) {
+        this.redrawObjects();
       }
 
-      this.redrawObjects();
+      this.mouseStartX = mouseX;
+      this.mouseStartY = mouseY;
     },
     mouseUp() {
       this.draggedObject.isDragging = false;
