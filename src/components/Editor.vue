@@ -65,6 +65,7 @@ export default {
       this.editor.objects.forEach(({ img, x, y }) => {
         this.context.drawImage(img, x, y);
       });
+      this.addObjectHighlight();
     },
     setUpCanvas() {
       // Feed the size back to the canvas
@@ -120,6 +121,19 @@ export default {
         && this.draggedObject.x + this.draggedObject.img.width < this.canvas.width
         && this.draggedObject.y >= 0
         && this.draggedObject.y + this.draggedObject.img.height < this.canvas.height;
+    },
+    addObjectHighlight() {
+      if (!this.draggedObject) {
+        return;
+      }
+      this.context.strokeStyle = 'green';
+      this.context.lineWidth = 2;
+      this.context.strokeRect(
+        this.draggedObject.x,
+        this.draggedObject.y,
+        this.draggedObject.img.width,
+        this.draggedObject.img.height,
+      );
     },
   },
 };
