@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" :style="cssVars">
+  <div class="editor">
     <canvas ref="canvas" class="editor__canvas" />
   </div>
 </template>
@@ -10,17 +10,8 @@ const isPointInsideObject = (pointX, pointY, object) => pointX >= object.x
   && pointY >= object.y
   && pointY < object.y + object.img.height;
 
-const RATIO = 16 / 9; // The canvas should be 100% width with a 16:9 aspect ratio.
-
 export default {
   name: 'Editor',
-  computed: {
-    cssVars() {
-      return {
-        '--ratio': RATIO, // sharing ratio between js and css
-      };
-    },
-  },
   created() {
     this.editor = { // TODO: move to store
       objects: [],
@@ -135,6 +126,9 @@ export default {
 </script>
 
 <style lang="less">
+:root {
+  --ratio: calc(16 / 9);
+}
 .editor {
   position: relative;
   width: 100%;
