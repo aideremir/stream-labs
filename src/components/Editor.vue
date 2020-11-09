@@ -37,7 +37,7 @@ export default {
     * Adds browser event listeners
     * */
     addListeners() {
-      window.addEventListener('resize', this.redrawObjects);
+      window.addEventListener('resize', this.canvasResizeHandler);
       this.canvas.addEventListener('mousedown', this.mouseDown);
       this.canvas.addEventListener('mousemove', this.mouseMove);
       this.canvas.addEventListener('mouseup', this.mouseUp);
@@ -46,7 +46,7 @@ export default {
     * Removes browser event listeners
     * */
     removeListeners() {
-      window.removeEventListener('resize', this.redrawObjects);
+      window.removeEventListener('resize', this.canvasResizeHandler);
       this.canvas.removeEventListener('mousedown', this.mouseDown);
       this.canvas.removeEventListener('mousemove', this.mouseMove);
       this.canvas.removeEventListener('mouseup', this.mouseUp);
@@ -72,16 +72,22 @@ export default {
       img.src = url;
     },
     /*
-    * Redraws all the objects on some events
+    * Redraws all the objects on drag
     * */
     redrawObjects() {
       // preventing added image resize on canvas resizing
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.setUpCanvas();
       this.editor.objects.forEach(({ img, x, y }) => {
         this.context.drawImage(img, x, y);
       });
       this.addObjectHighlight();
+    },
+    canvasResizeHandler() {
+      this.setUpCanvas();
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.editor.objects.forEach(({ img, x, y }) => {
+        this.context.drawImage(img, x, y);
+      });
     },
     /*
     * Feeds the size back to the canvas
