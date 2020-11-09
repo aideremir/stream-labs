@@ -112,16 +112,27 @@ export default {
 
       this.draggedObject.x += dX;
       this.draggedObject.y += dY;
-      this.redrawObjects();
 
       this.mouseStartX = mouseX;
       this.mouseStartY = mouseY;
+
+      if (!this.isDraggedObjectFullyOnCanvas()) {
+        return;
+      }
+
+      this.redrawObjects();
     },
     mouseUp() {
       this.draggedObject.isDragging = false;
       this.draggedObject = null;
       this.mouseStartX = null;
       this.mouseStartY = null;
+    },
+    isDraggedObjectFullyOnCanvas() {
+      return this.draggedObject.x >= 0
+        && this.draggedObject.x + this.draggedObject.img.width < this.canvas.width
+        && this.draggedObject.y >= 0
+        && this.draggedObject.y + this.draggedObject.img.height < this.canvas.height;
     },
   },
 };
